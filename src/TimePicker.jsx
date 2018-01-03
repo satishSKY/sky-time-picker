@@ -66,6 +66,7 @@ export default class Picker extends Component {
     className: '',
     popupClassName: '',
     align: {},
+    defaultValue: new Date,
     defaultOpenValue: new Date,
     allowEmpty: true,
     showHour: true,
