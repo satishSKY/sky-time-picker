@@ -25,7 +25,7 @@ React TimePicker
 example
 --------
 
-http://react-component.github.io/time-picker/
+http://frostiebot.github.io/time-picker/
 
 install
 -------
