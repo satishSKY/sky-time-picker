@@ -5,9 +5,7 @@ import 'rc-time-picker-date-fns/assets/index.less';
 import React from 'react';
 import ReactDom from 'react-dom';
 
-import TimePicker from 'rc-time-picker-date-fns';
-
-import { formatTime } from 'rc-time-picker-date-fns/date-utils';
+import TimePicker, { formatTime } from 'rc-time-picker-date-fns';
 
 class App extends React.Component {
   state = {
