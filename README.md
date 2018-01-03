@@ -3,9 +3,6 @@
 React TimePicker
 
 [![NPM version][npm-image]][npm-url]
-[![build status][travis-image]][travis-url]
-[![Test coverage][coveralls-image]][coveralls-url]
-[![gemnasium deps][gemnasium-image]][gemnasium-url]
 [![node version][node-image]][node-url]
 [![npm download][download-image]][download-url]
 
@@ -49,16 +46,16 @@ API
 | disabled                | Boolean                           | false   | whether picker is disabled |
 | allowEmpty              | Boolean                           | true | allow clearing text |
 | open                    | Boolean                           | false | current open state of picker. controlled prop |
-| defaultValue            | moment                            | null | default initial value |
-| defaultOpenValue        | moment                            | moment() | default open panel value, used to set utcOffset,locale if value/defaultValue absent |
-| value                   | moment                            | null | current value |
+| defaultValue            | Date                              | null | default initial value |
+| defaultOpenValue        | Date                              | new Date | default open panel value, used to set utcOffset,locale if value/defaultValue absent |
+| value                   | Date                              | null | current value |
 | placeholder             | String                            | '' | time input's placeholder |
 | className               | String                            | '' | time picker className |
 | popupClassName          | String                            | '' | time panel className |
 | showHour                | Boolean                           | true | whether show hour | |
 | showMinute              | Boolean                           | true | whether show minute |
 | showSecond              | Boolean                           | true | whether show second |
-| format                  | String                            | - | moment format |
+| format                  | String                            | - | date-fns format |
 | disabledHours           | Function                          | - | disabled hour options |
 | disabledMinutes         | Function                          | - | disabled minute options |
 | disabledSeconds         | Function                          | - | disabled second options |

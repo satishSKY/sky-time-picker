@@ -5,15 +5,15 @@ import 'rc-time-picker-date-fns/assets/index.less';
 import React from 'react';
 import ReactDom from 'react-dom';
 
-import moment from 'moment';
-
 import TimePicker from 'rc-time-picker-date-fns';
+
+import { formatTime } from 'rc-time-picker-date-fns/date-utils';
 
 const showSecond = true;
 const str = showSecond ? 'HH:mm:ss' : 'HH:mm';
 
 function onChange(value) {
-  console.log(value && value.format(str));
+  console.log(value && formatTime(value, str));
 }
 
 ReactDom.render(
@@ -21,7 +21,7 @@ ReactDom.render(
     format={str}
     showSecond={showSecond}
     // use to control utfOffset, locale, default open value
-    defaultOpenValue={moment()}
+    defaultOpenValue={new Date}
     className="xxx"
     onChange={onChange}
     disabledHours={() => [0, 1, 2, 3, 4, 5, 6, 7, 8, 22, 23]}

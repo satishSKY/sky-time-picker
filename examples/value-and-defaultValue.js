@@ -4,15 +4,17 @@ import 'rc-time-picker-date-fns/assets/index.less';
 
 import React from 'react';
 import ReactDom from 'react-dom';
-import moment from 'moment';
+
 import TimePicker from 'rc-time-picker-date-fns';
+
+import { formatTime } from 'rc-time-picker-date-fns/date-utils';
 
 class App extends React.Component {
   state = {
-    value: moment(),
+    value: new Date,
   };
   handleValueChange = (value) => {
-    console.log(value && value.format('HH:mm:ss'));
+    console.log(value && formatTime(value, 'HH:mm:ss'));
     this.setState({ value });
   }
   clear = () => {

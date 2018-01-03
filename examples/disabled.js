@@ -5,14 +5,12 @@ import 'rc-time-picker-date-fns/assets/index.less';
 import React from 'react';
 import ReactDom from 'react-dom';
 
-import moment from 'moment';
-
 import TimePicker from 'rc-time-picker-date-fns';
 
 const showSecond = true;
 const str = showSecond ? 'HH:mm:ss' : 'HH:mm';
 
-const now = moment().hour(14).minute(30);
+const now = new Date('2018-01-03 14:30:00');
 
 function generateOptions(length, excludedOptions) {
   const arr = [];
