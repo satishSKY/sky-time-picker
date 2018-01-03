@@ -9,18 +9,12 @@ React TimePicker
 [![node version][node-image]][node-url]
 [![npm download][download-image]][download-url]
 
-[npm-image]: http://img.shields.io/npm/v/rc-time-picker.svg?style=flat-square
-[npm-url]: http://npmjs.org/package/rc-time-picker
-[travis-image]: https://img.shields.io/travis/react-component/time-picker.svg?style=flat-square
-[travis-url]: https://travis-ci.org/react-component/time-picker
-[coveralls-image]: https://img.shields.io/coveralls/react-component/time-picker.svg?style=flat-square
-[coveralls-url]: https://coveralls.io/r/react-component/time-picker?branch=master
-[gemnasium-image]: http://img.shields.io/gemnasium/react-component/time-picker.svg?style=flat-square
-[gemnasium-url]: https://gemnasium.com/react-component/time-picker
+[npm-image]: http://img.shields.io/npm/v/rc-time-picker-date-fns.svg?style=flat-square
+[npm-url]: http://npmjs.org/package/rc-time-picker-date-fns
 [node-image]: https://img.shields.io/badge/node.js-%3E=_4.0.0-green.svg?style=flat-square
 [node-url]: http://nodejs.org/download/
-[download-image]: https://img.shields.io/npm/dm/rc-time-picker.svg?style=flat-square
-[download-url]: https://npmjs.org/package/rc-time-picker
+[download-image]: https://img.shields.io/npm/dm/rc-time-picker-date-fns.svg?style=flat-square
+[download-url]: https://npmjs.org/package/rc-time-picker-date-fns
 
 example
 --------
@@ -31,14 +25,14 @@ install
 -------
 
 ```
-npm install rc-time-picker
+npm install rc-time-picker-date-fns
 ```
 
 Usage
 -----
 
 ```
-import TimePicker from 'rc-time-picker';
+import TimePicker from 'rc-time-picker-date-fns';
 import ReactDOM from 'react-dom';
 ReactDOM.render(<TimePicker />, container);
 ```
@@ -100,4 +94,4 @@ open coverage/ dir
 License
 -------
 
-rc-time-picker is released under the MIT license.
+rc-time-picker-date-fns is released under the MIT license.
