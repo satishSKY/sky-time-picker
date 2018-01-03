@@ -1,8 +1,8 @@
-import 'rc-time-picker/assets/index.less';
+import 'rc-time-picker-date-fns/assets/index.less';
 import React from 'react';
 import ReactDom from 'react-dom';
 import moment from 'moment';
-import TimePicker from 'rc-time-picker';
+import TimePicker from 'rc-time-picker-date-fns';
 
 ReactDom.render(
   <div>
