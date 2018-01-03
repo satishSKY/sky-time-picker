@@ -1,6 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+
+import {
+  isValidTime,
+  formatTime,
+  parseTime,
+  getHours,
+  setHours,
+  isSameHour,
+  getMinutes,
+  setMinutes,
+  isSameMinute,
+  getSeconds,
+  setSeconds,
+  isSameSecond,
+} from './date-utils';
 
 class Header extends Component {
   static propTypes = {
@@ -9,7 +23,7 @@ class Header extends Component {
     disabledDate: PropTypes.func,
     placeholder: PropTypes.string,
     clearText: PropTypes.string,
-    value: PropTypes.object,
+    value: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
     hourOptions: PropTypes.array,
     minuteOptions: PropTypes.array,
     secondOptions: PropTypes.array,
@@ -20,7 +34,7 @@ class Header extends Component {
     onClear: PropTypes.func,
     onEsc: PropTypes.func,
     allowEmpty: PropTypes.bool,
-    defaultOpenValue: PropTypes.object,
+    defaultOpenValue: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
     currentSelectPanel: PropTypes.string,
     focusOnOpen: PropTypes.bool,
     onKeyDown: PropTypes.func,
@@ -30,7 +44,7 @@ class Header extends Component {
     super(props);
     const { value, format } = props;
     this.state = {
-      str: value && value.format(format) || '',
+      str: value && formatTime(value, format) || '',
       invalid: false,
     };
   }
@@ -49,16 +63,16 @@ class Header extends Component {
   componentWillReceiveProps(nextProps) {
     const { value, format } = nextProps;
     this.setState({
-      str: value && value.format(format) || '',
+      str: value && formatTime(value, format) || '',
       invalid: false,
     });
   }
 
   onInputChange = (event) => {
     const str = event.target.value;
-    this.setState({
-      str,
-    });
+
+    this.setState({ str });
+
     const {
       format, hourOptions, minuteOptions, secondOptions,
       disabledHours, disabledMinutes,
@@ -67,54 +81,65 @@ class Header extends Component {
 
     if (str) {
       const originalValue = this.props.value;
-      const value = this.getProtoValue().clone();
-      const parsed = moment(str, format, true);
-      if (!parsed.isValid()) {
-        this.setState({
-          invalid: true,
-        });
+      const parsed = parseTime(str, format);
+
+
+      if (!isValidTime(parsed)) {
+        this.setState({ invalid: true });
         return;
       }
-      value.hour(parsed.hour()).minute(parsed.minute()).second(parsed.second());
+
+      const value = setHours(
+        setMinutes(
+          setSeconds(
+            this.getProtoValue(),
+            getSeconds(parsed)
+          ),
+          getMinutes(parsed)
+        ),
+        getHours(parsed)
+      );
 
       // if time value not allowed, response warning.
       if (
-        hourOptions.indexOf(value.hour()) < 0 ||
-        minuteOptions.indexOf(value.minute()) < 0 ||
-        secondOptions.indexOf(value.second()) < 0
+        hourOptions.indexOf(getHours(value)) < 0 ||
+        minuteOptions.indexOf(getMinutes(value)) < 0 ||
+        secondOptions.indexOf(getSeconds(value)) < 0
       ) {
-        this.setState({
-          invalid: true,
-        });
+        this.setState({ invalid: true });
         return;
       }
 
       // if time value is disabled, response warning.
       const disabledHourOptions = disabledHours();
-      const disabledMinuteOptions = disabledMinutes(value.hour());
-      const disabledSecondOptions = disabledSeconds(value.hour(), value.minute());
+      const disabledMinuteOptions = disabledMinutes(getHours(value));
+      const disabledSecondOptions = disabledSeconds(getHours(value), getMinutes(value));
       if (
-        (disabledHourOptions && disabledHourOptions.indexOf(value.hour()) >= 0) ||
-        (disabledMinuteOptions && disabledMinuteOptions.indexOf(value.minute()) >= 0) ||
-        (disabledSecondOptions && disabledSecondOptions.indexOf(value.second()) >= 0)
+        (disabledHourOptions && disabledHourOptions.indexOf(getHours(value)) >= 0) ||
+        (disabledMinuteOptions && disabledMinuteOptions.indexOf(getMinutes(value)) >= 0) ||
+        (disabledSecondOptions && disabledSecondOptions.indexOf(getSeconds(value)) >= 0)
       ) {
-        this.setState({
-          invalid: true,
-        });
+        this.setState({ invalid: true });
         return;
       }
 
       if (originalValue) {
         if (
-          originalValue.hour() !== value.hour() ||
-          originalValue.minute() !== value.minute() ||
-          originalValue.second() !== value.second()
+          !isSameHour(originalValue, value) ||
+          !isSameMinute(originalValue, value) ||
+          !isSameSecond(originalValue, value)
         ) {
           // keep other fields for rc-calendar
-          const changedValue = originalValue.clone();
-          changedValue.hour(value.hour());
-          changedValue.minute(value.minute());
-          changedValue.second(value.second());
+          const changedValue = setHours(
+            setMinutes(
+              setSeconds(
+                originalValue,
+                getSeconds(value)
+              ),
+              getMinutes(value)
+            ),
+            getHours(value)
+          );
           onChange(changedValue);
         }
       } else if (originalValue !== value) {
@@ -123,15 +148,11 @@ class Header extends Component {
     } else if (allowEmpty) {
       onChange(null);
     } else {
-      this.setState({
-        invalid: true,
-      });
+      this.setState({ invalid: true });
       return;
     }
 
-    this.setState({
-      invalid: false,
-    });
+    this.setState({ invalid: false });
   }
 
   onKeyDown = (e) => {
@@ -139,7 +160,6 @@ class Header extends Component {
     if (e.keyCode === 27) {
       onEsc();
     }
-
     onKeyDown(e);
   }
 

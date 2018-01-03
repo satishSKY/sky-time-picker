@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Header from './Header';
-import Combobox from './Combobox';
-import moment from 'moment';
+
 import classNames from 'classnames';
 
-function noop() {
-}
+import { parseTime, getHours, getMinutes } from './date-utils';
+
+import Header from './Header';
+import Combobox from './Combobox';
+
+function noop() {}
 
 function generateOptions(length, disabledOptions, hideDisabledOptions, step = 1) {
   const arr = [];
@@ -23,8 +25,8 @@ class Panel extends Component {
     clearText: PropTypes.string,
     prefixCls: PropTypes.string,
     className: PropTypes.string,
-    defaultOpenValue: PropTypes.object,
-    value: PropTypes.object,
+    defaultOpenValue: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+    value: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
     placeholder: PropTypes.string,
     format: PropTypes.string,
     disabledHours: PropTypes.func,
@@ -54,7 +56,7 @@ class Panel extends Component {
     disabledHours: noop,
     disabledMinutes: noop,
     disabledSeconds: noop,
-    defaultOpenValue: moment(),
+    defaultOpenValue: new Date,
     use12Hours: false,
     addon: noop,
     onKeyDown: noop,
@@ -63,7 +65,7 @@ class Panel extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: props.value,
+      value: parseTime(props.value),
       selectionRange: [],
     };
   }
@@ -71,9 +73,7 @@ class Panel extends Component {
   componentWillReceiveProps(nextProps) {
     const value = nextProps.value;
     if (value) {
-      this.setState({
-        value,
-      });
+      this.setState({ value });
     }
   }
 
@@ -98,13 +98,22 @@ class Panel extends Component {
       format, defaultOpenValue, clearText, onEsc, addon, use12Hours, onClear,
       focusOnOpen, onKeyDown, hourStep, minuteStep, secondStep,
     } = this.props;
+
     const {
       value, currentSelectPanel,
     } = this.state;
+
     const disabledHourOptions = disabledHours();
-    const disabledMinuteOptions = disabledMinutes(value ? value.hour() : null);
-    const disabledSecondOptions = disabledSeconds(value ? value.hour() : null,
-      value ? value.minute() : null);
+    const disabledMinuteOptions = disabledMinutes(value ? getHours(value) : null);
+    const disabledSecondOptions = disabledSeconds(
+      value
+        ? getHours(value)
+        : null,
+      value
+        ? getMinutes(value)
+        : null
+      );
+
     const hourOptions = generateOptions(
       24, disabledHourOptions, hideDisabledOptions, hourStep
     );

@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+
 import Trigger from 'rc-trigger';
+
+import { formatTime } from './date-utils';
+
 import Panel from './Panel';
 import placements from './placements';
-import moment from 'moment';
 
-function noop() {
-}
+function noop() {}
 
 function refFn(field, component) {
   this[field] = component;
@@ -16,11 +18,11 @@ export default class Picker extends Component {
   static propTypes = {
     prefixCls: PropTypes.string,
     clearText: PropTypes.string,
-    value: PropTypes.object,
-    defaultOpenValue: PropTypes.object,
+    value: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+    defaultOpenValue: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
     disabled: PropTypes.bool,
     allowEmpty: PropTypes.bool,
-    defaultValue: PropTypes.object,
+    defaultValue: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
     open: PropTypes.bool,
     defaultOpen: PropTypes.bool,
     align: PropTypes.object,
@@ -64,7 +66,7 @@ export default class Picker extends Component {
     className: '',
     popupClassName: '',
     align: {},
-    defaultOpenValue: moment(),
+    defaultOpenValue: new Date,
     allowEmpty: true,
     showHour: true,
     showMinute: true,
@@ -89,19 +91,15 @@ export default class Picker extends Component {
     super(props);
     this.saveInputRef = refFn.bind(this, 'picker');
     this.savePanelRef = refFn.bind(this, 'panelInstance');
+
     const { defaultOpen, defaultValue, open = defaultOpen, value = defaultValue } = props;
-    this.state = {
-      open,
-      value,
-    };
+    this.state = { open, value };
   }
 
   componentWillReceiveProps(nextProps) {
     const { value, open } = nextProps;
     if ('value' in nextProps) {
-      this.setState({
-        value,
-      });
+      this.setState({ value });
     }
     if (open !== undefined) {
       this.setState({ open });
@@ -134,9 +132,7 @@ export default class Picker extends Component {
 
   setValue(value) {
     if (!('value' in this.props)) {
-      this.setState({
-        value,
-      });
+      this.setState({ value });
     }
     this.props.onChange(value);
   }
@@ -256,6 +252,7 @@ export default class Picker extends Component {
     } = this.props;
     const { open, value } = this.state;
     const popupClassName = this.getPopupClassName();
+
     return (
       <Trigger
         prefixCls={`${prefixCls}-panel`}
@@ -280,7 +277,7 @@ export default class Picker extends Component {
             name={name}
             onKeyDown={this.onKeyDown}
             disabled={disabled}
-            value={value && value.format(this.getFormat()) || ''}
+            value={value && formatTime(value, this.getFormat()) || ''}
             autoComplete={autoComplete}
             onFocus={onFocus}
             onBlur={onBlur}

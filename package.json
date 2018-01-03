@@ -1,7 +1,7 @@
 {
-  "name": "rc-time-picker",
+  "name": "rc-time-picker-date-fns",
   "version": "3.2.1",
-  "description": "React TimePicker",
+  "description": "React TimePicker using date-fns",
   "keywords": [
     "react",
     "react-time-picker",
@@ -20,13 +20,13 @@
   "main": "lib/index",
   "module": "es/index",
   "homepage": "http://github.com/react-component/time-picker",
-  "author": "wuzhao.mail@gmail.com",
+  "author": "frostiebot",
   "repository": {
     "type": "git",
-    "url": "git@github.com:react-component/time-picker.git"
+    "url": "git@github.com:frostiebot/time-picker.git"
   },
   "bugs": {
-    "url": "http://github.com/react-component/time-picker/issues"
+    "url": "http://github.com/frostiebot/time-picker/issues"
   },
   "licenses": "MIT",
   "config": {
@@ -56,7 +56,8 @@
     "rc-tools": "6.x",
     "rc-util": "^4.0.2",
     "react": "^16.0.0",
-    "react-dom": "^16.0.0"
+    "react-dom": "^16.0.0",
+    "webpack": "^3.10.0"
   },
   "pre-commit": [
     "lint"
@@ -64,7 +65,7 @@
   "dependencies": {
     "babel-runtime": "6.x",
     "classnames": "2.x",
-    "moment": "2.x",
+    "date-fns": "^2.0.0-alpha.7",
     "prop-types": "^15.5.8",
     "rc-trigger": "^2.2.0"
   }

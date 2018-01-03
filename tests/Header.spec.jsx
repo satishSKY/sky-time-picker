@@ -1,13 +1,16 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
-import TimePicker from '../src/TimePicker';
 
 import TestUtils from 'react-dom/test-utils';
-const Simulate = TestUtils.Simulate;
 import expect from 'expect.js';
 import async from 'async';
 import KeyCode from 'rc-util/lib/KeyCode';
-import moment from 'moment';
+
+import { parseTime } from '../src/date-utils';
+
+import TimePicker from '../src/TimePicker';
+
+const Simulate = TestUtils.Simulate;
 
 describe('Header', () => {
   let container;
@@ -20,7 +23,7 @@ describe('Header', () => {
       <TimePicker
         format={format}
         showSecond={showSecond}
-        defaultValue={moment('01:02:03', format)}
+        defaultValue={parseTime('01:02:03', format)}
         {...props}
       />, container);
   }
@@ -38,17 +41,25 @@ describe('Header', () => {
   describe('input to change value', () => {
     it('input correctly', (done) => {
       const picker = renderPicker();
+
       expect(picker.state.open).not.to.be.ok();
+
       const input = TestUtils.scryRenderedDOMComponentsWithClass(picker,
-        'rc-time-picker-input')[0];
+        'rc-time-picker-input'
+      )[0];
+
       let header;
+
       async.series([(next) => {
         Simulate.click(input);
         setTimeout(next, 100);
       }, (next) => {
         expect(picker.state.open).to.be(true);
+
         header = TestUtils.scryRenderedDOMComponentsWithClass(picker.panelInstance,
-          'rc-time-picker-panel-input')[0];
+          'rc-time-picker-panel-input'
+        )[0];
+
         expect(header).to.be.ok();
         expect((header).value).to.be('01:02:03');
         expect((input).value).to.be('01:02:03');

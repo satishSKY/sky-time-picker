@@ -1,11 +1,16 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
-import TimePicker from '../src/TimePicker';
+
 import TestUtils from 'react-dom/test-utils';
-const Simulate = TestUtils.Simulate;
+
 import expect from 'expect.js';
 import async from 'async';
-import moment from 'moment';
+
+import { parseTime, getHours, getMinutes, getSeconds } from '../src/date-utils';
+
+import TimePicker from '../src/TimePicker';
+
+const Simulate = TestUtils.Simulate;
 
 const map = (arr, fn) => Array.prototype.map.call(arr, fn);
 
@@ -20,7 +25,7 @@ describe('Select', () => {
       <TimePicker
         format={format}
         showSecond={showSecond}
-        defaultValue={moment('01:02:04', format)}
+        defaultValue={parseTime('01:02:04', format)}
         {...props}
       />, container);
   }
@@ -155,7 +160,7 @@ describe('Select', () => {
         setTimeout(next, 100);
       }, (next) => {
         expect(change).to.be.ok();
-        expect(change.hour()).to.be(19);
+        expect(getHours(change)).to.be(19);
         expect((header).value).to.be('19:02:04');
         expect((input).value).to.be('19:02:04');
         expect(picker.state.open).to.be.ok();
@@ -197,7 +202,7 @@ describe('Select', () => {
         setTimeout(next, 100);
       }, (next) => {
         expect(change).to.be.ok();
-        expect(change.minute()).to.be(19);
+        expect(getMinutes(change)).to.be(19);
         expect((header).value).to.be('01:19:04');
         expect((input).value).to.be('01:19:04');
         expect(picker.state.open).to.be.ok();
@@ -239,7 +244,7 @@ describe('Select', () => {
         setTimeout(next, 100);
       }, (next) => {
         expect(change).to.be.ok();
-        expect(change.second()).to.be(19);
+        expect(getSeconds(change)).to.be(19);
         expect((header).value).to.be('01:02:19');
         expect((input).value).to.be('01:02:19');
         expect(picker.state.open).to.be.ok();
@@ -309,7 +314,7 @@ describe('Select', () => {
         setTimeout(next, 100);
       }, (next) => {
         expect(change).to.be.ok();
-        expect(change.minute()).to.be(7);
+        expect(getMinutes(change)).to.be(7);
         expect((header).value).to.be('01:07:04');
         expect((input).value).to.be('01:07:04');
         expect(picker.state.open).to.be.ok();
@@ -354,7 +359,7 @@ describe('Select', () => {
         setTimeout(next, 100);
       }, (next) => {
         expect(change).to.be.ok();
-        expect(change.hour()).to.be(6);
+        expect(getHours(change)).to.be(6);
         expect((header).value).to.be('06:02:04');
         expect((input).value).to.be('06:02:04');
         expect(picker.state.open).to.be.ok();
@@ -366,7 +371,7 @@ describe('Select', () => {
         setTimeout(next, 100);
       }, (next) => {
         expect(change).to.be.ok();
-        expect(change.hour()).to.be(8);
+        expect(getHours(change)).to.be(8);
         expect((header).value).to.be('08:02:04');
         expect((input).value).to.be('08:02:04');
         expect(picker.state.open).to.be.ok();
@@ -383,7 +388,7 @@ describe('Select', () => {
     it('renders correctly', (done) => {
       const picker = renderPicker({
         use12Hours: true,
-        defaultValue: moment().hour(14).minute(0).second(0),
+        defaultValue: parseTime('14:00:00', 'HH:mm:ss'),  // moment().hour(14).minute(0).second(0),
         showSecond: false,
         format: undefined,
       });
@@ -416,7 +421,7 @@ describe('Select', () => {
     it('renders 12am correctly', (done) => {
       const picker = renderPicker({
         use12Hours: true,
-        defaultValue: moment().hour(0).minute(0).second(0),
+        defaultValue: parseTime('00:00:00', 'HH:mm:ss'),  // moment().hour(0).minute(0).second(0),
         showSecond: false,
         format: undefined,
       });
@@ -447,7 +452,7 @@ describe('Select', () => {
     it('renders 5am correctly', (done) => {
       const picker = renderPicker({
         use12Hours: true,
-        defaultValue: moment().hour(0).minute(0).second(0),
+        defaultValue: parseTime('00:00:00', 'HH:mm:ss'),  // moment().hour(0).minute(0).second(0),
         showSecond: false,
         format: undefined,
       });
@@ -480,7 +485,7 @@ describe('Select', () => {
     it('renders 12am/pm correctly', (done) => {
       const picker = renderPicker({
         use12Hours: true,
-        defaultValue: moment().hour(0).minute(0).second(0),
+        defaultValue: parseTime('00:00:00', 'HH:mm:ss'),  // moment().hour(0).minute(0).second(0),
         showSecond: false,
         format: undefined,
       });
@@ -518,7 +523,7 @@ describe('Select', () => {
     it('renders uppercase AM correctly', (done) => {
       const picker = renderPicker({
         use12Hours: true,
-        defaultValue: moment().hour(0).minute(0).second(0),
+        defaultValue: parseTime('00:00:00', 'HH:mm:ss'),  // moment().hour(0).minute(0).second(0),
         showSecond: false,
         format: 'h:mm A',
       });

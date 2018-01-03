@@ -1,12 +1,16 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
-import TimePicker from '../src/TimePicker';
 
 import TestUtils from 'react-dom/test-utils';
-const Simulate = TestUtils.Simulate;
+
 import expect from 'expect.js';
 import async from 'async';
-import moment from 'moment';
+
+import { parseTime, getHours, getMinutes, getSeconds } from '../src/date-utils';
+
+import TimePicker from '../src/TimePicker';
+
+const Simulate = TestUtils.Simulate;
 
 describe('TimePicker', () => {
   let container;
@@ -19,7 +23,20 @@ describe('TimePicker', () => {
       <TimePicker
         format={format}
         showSecond={showSecond}
-        defaultValue={moment('12:57:58', format)}
+        defaultValue={parseTime('12:57:58', format)}
+        {...props}
+      />, container);
+  }
+
+  function renderPickerWithoutHours(props) {
+    const showHour = false;
+    const format = ('mm:ss');
+
+    return ReactDOM.render(
+      <TimePicker
+        format={format}
+        showHour={showHour}
+        defaultValue={parseTime('01:24:03', 'HH:mm:ss')}
         {...props}
       />, container);
   }
@@ -32,7 +49,22 @@ describe('TimePicker', () => {
       <TimePicker
         format={format}
         showSecond={showSecond}
-        defaultValue={moment('08:24', format)}
+        defaultValue={parseTime('01:24:03', format)}
+        {...props}
+      />, container);
+  }
+
+  function renderPickerWithoutMinute(props) {
+    const showMinute = false;
+    const showSecond = false;
+    const format = ('HH');
+
+    return ReactDOM.render(
+      <TimePicker
+        format={format}
+        showSecond={showSecond}
+        showMinute={showMinute}
+        defaultValue={parseTime('01:24:03', format)}
         {...props}
       />, container);
   }
@@ -71,9 +103,9 @@ describe('TimePicker', () => {
         setTimeout(next, 100);
       }, (next) => {
         expect(change).to.be.ok();
-        expect(change.hour()).to.be(1);
-        expect(change.minute()).to.be(57);
-        expect(change.second()).to.be(58);
+        expect(getHours(change)).to.be(1);
+        expect(getMinutes(change)).to.be(57);
+        expect(getSeconds(change)).to.be(58);
         expect((input).value).to.be('01:57:58');
         expect(picker.state.open).to.be.ok();
         next();
@@ -140,6 +172,41 @@ describe('TimePicker', () => {
     });
   });
 
+  describe('render panel to body (without hours)', () => {
+    it('popup correctly', (done) => {
+      let change;
+      const picker = renderPickerWithoutHours({
+        onChange(v) {
+          change = v;
+        },
+      });
+      expect(picker.state.open).not.to.be.ok();
+      const input = TestUtils.scryRenderedDOMComponentsWithClass(picker,
+        'rc-time-picker-input')[0];
+      expect((input).value).to.be('24:03');
+      async.series([(next) => {
+        Simulate.click(input);
+        setTimeout(next, 100);
+      }, (next) => {
+        expect(TestUtils.scryRenderedDOMComponentsWithClass(picker.panelInstance,
+          'rc-time-picker-panel-inner')[0]).to.be.ok();
+        expect(picker.state.open).to.be(true);
+        const minute = TestUtils.scryRenderedDOMComponentsWithTag(picker.panelInstance, 'li')[24];
+        Simulate.click(minute);
+        setTimeout(next, 100);
+      }, (next) => {
+        expect(change).to.be.ok();
+        expect(getMinutes(change)).to.be(24);
+        expect(getSeconds(change)).to.be(3);
+        expect((input).value).to.be('24:03');
+        expect(picker.state.open).to.be.ok();
+        next();
+      }], () => {
+        done();
+      });
+    });
+  });
+
   describe('render panel to body (without seconds)', () => {
     it('popup correctly', (done) => {
       let change;
@@ -151,7 +218,7 @@ describe('TimePicker', () => {
       expect(picker.state.open).not.to.be.ok();
       const input = TestUtils.scryRenderedDOMComponentsWithClass(picker,
         'rc-time-picker-input')[0];
-      expect((input).value).to.be('08:24');
+      expect((input).value).to.be('01:24');
       async.series([(next) => {
         Simulate.click(input);
         setTimeout(next, 100);
@@ -164,9 +231,43 @@ describe('TimePicker', () => {
         setTimeout(next, 100);
       }, (next) => {
         expect(change).to.be.ok();
-        expect(change.hour()).to.be(1);
-        expect(change.minute()).to.be(24);
+        expect(getHours(change)).to.be(1);
+        expect(getMinutes(change)).to.be(24);
         expect((input).value).to.be('01:24');
+        expect(picker.state.open).to.be.ok();
+        next();
+      }], () => {
+        done();
+      });
+    });
+  });
+
+  describe('render panel to body (without minutes)', () => {
+    it('popup correctly', (done) => {
+      let change;
+      const picker = renderPickerWithoutMinute({
+        onChange(v) {
+          change = v;
+        },
+      });
+      expect(picker.state.open).not.to.be.ok();
+      const input = TestUtils.scryRenderedDOMComponentsWithClass(picker,
+        'rc-time-picker-input')[0];
+      expect((input).value).to.be('01');
+      async.series([(next) => {
+        Simulate.click(input);
+        setTimeout(next, 100);
+      }, (next) => {
+        expect(TestUtils.scryRenderedDOMComponentsWithClass(picker.panelInstance,
+          'rc-time-picker-panel-inner')[0]).to.be.ok();
+        expect(picker.state.open).to.be(true);
+        const hour = TestUtils.scryRenderedDOMComponentsWithTag(picker.panelInstance, 'li')[1];
+        Simulate.click(hour);
+        setTimeout(next, 100);
+      }, (next) => {
+        expect(change).to.be.ok();
+        expect(getHours(change)).to.be(1);
+        expect((input).value).to.be('01');
         expect(picker.state.open).to.be.ok();
         next();
       }], () => {
