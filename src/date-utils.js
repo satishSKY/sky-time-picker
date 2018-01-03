@@ -12,7 +12,7 @@ import {
   getSeconds,
   setSeconds,
   isSameSecond,
-} from 'date-fns';
+} from 'date-fns/esm';
 
 export const parseTime = (value, format = null) => {
   if (value === null) {

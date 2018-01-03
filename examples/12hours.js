@@ -5,14 +5,14 @@ import 'rc-time-picker-date-fns/assets/index.less';
 import React from 'react';
 import ReactDom from 'react-dom';
 
-import TimePicker from 'rc-time-picker-date-fns';
+import TimePicker, { formatTime } from 'rc-time-picker-date-fns';
 
 const format = 'h:mm a';
 
 const now = new Date;
 
 function onChange(value) {
-  console.log(value && value.format(format));
+  console.log(value && formatTime(value, format));
 }
 
 ReactDom.render(
