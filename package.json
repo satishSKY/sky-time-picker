@@ -52,8 +52,8 @@
     "rc-test": "^6.0.1",
     "rc-tools": "6.x",
     "rc-util": "^4.0.2",
-    "react": "^16.0.0",
-    "react-dom": "^16.0.0",
+    "react": "^17.0.0",
+    "react-dom": "^17.0.0",
     "webpack": "^3.10.0"
   },
   "pre-commit": [
