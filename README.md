@@ -13,17 +13,6 @@ React TimePicker
 [download-image]: https://img.shields.io/npm/dm/rc-time-picker-date-fns.svg?style=flat-square
 [download-url]: https://npmjs.org/package/rc-time-picker-date-fns
 
-example
---------
-
-http://frostiebot.github.io/time-picker/
-
-install
--------
-
-```
-npm install rc-time-picker-date-fns
-```
 
 Usage
 -----
